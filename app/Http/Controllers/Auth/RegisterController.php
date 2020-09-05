@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use App\Models\Customer;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -29,7 +30,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/admin';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -52,7 +53,11 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'email'     => ['required', 'email', 'unique:users'],
+            'password' => ['required', 'string', 'min:8'],
+            'userpassword' => ['required', 'string', 'min:8', 'same:password'],
+            'phone_number' => ['required'],
+            'address' => ['required'],
         ]);
     }
 
@@ -64,10 +69,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        Customer::create([
+            'email' => $data['email'],
+            'name' => $data['name'],
+            'username' => $data['username'],
+            'phone_number' => $data['phone_number'],
+            'password' => Hash::make($data['password']),
+            'address' => $data['address'],
+        ]);
         return User::create([
             'name' => $data['name'],
             'username' => $data['username'],
+            'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'role' => 'customer',
         ]);
     }
 }

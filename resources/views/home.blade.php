@@ -1,96 +1,134 @@
-<!-- =========================================================================================
-  Name: KelasKita Website
-  Author: Ahmad Saugi
-  Author URL: http://ahmadsaugi.com
-  Repository: https://github.com/zuramai/kelaskita
-  Community: Devover ID
-  Community URL : http://devover.id
-========================================================================================== -->
-
-@extends('layouts.app')
-
+@extends('layouts.master')
+@section('title', 'Dtech')
 @section('content')
-@section('logo', Storage::url('/images/logo/'.config('web_config')['WEB_LOGO_WHITE']))
-@push('styles')
-    <link rel="stylesheet" href="{{asset('css/front.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/css/icons.css')}}">
-@endpush
-<section class="hero" style="background-image: linear-gradient(to right, rgba(74, 0, 224, .9), rgba(142, 45, 226,.9)),url({{Storage::url("images/front/".config('web_config')['HERO_BACKGROUND_IMAGE'])}})">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <div class="hero-text text-center">
-                    <div class="text-title">{{config('web_config')['HERO_TEXT_HEADER'] }}</div>
-                    <p>{{config('web_config')['HERO_TEXT_DESCRIPTION'] }}</p>
+    <!-- home section -->
+    <div id="home">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 col-sm-3"></div>
+                <div class="col-md-7 col-sm-9">
+                    <h3>{{ config('web_config')['MAIN_CONTENT_TITLE'] }}</h3>
+                    <h1>{{ config('web_config')['MAIN_CONTENT_DESCRIPTION'] }}</h1>
                 </div>
             </div>
         </div>
     </div>
-</section>
-<section class="students">
-    <div class="container">
-        <div class="section-header text-center">
-            <h1>Daftar Siswa</h1>
-            <div class="divider mx-auto"></div>
-        </div>
-        <div class="section-body">
+
+    <!-- divider section -->
+    <div class="divider">
+        <div class="container">
             <div class="row">
-                @foreach($students as $student)
-                <div class="col-md-6 mb-5">
-                    <a href="{{route('student.show', ['id' => $student->id])}}" class='card-student'>
-                        <div class="card">
-                            <div class="row">
-                                <div class="col-4">
-                                    <img src="{{ Storage::url('images/students/'.$student->image_name) }}" alt="{{$student->name }}">
-                                </div>
-                                <div class="col-8 py-3 px-3">
-                                    <div class="student-name mb-2">{{$student->name}}</div>
-                                    <p class='student-description'>{{substr($student->description,0,125)}}.. <span class='text-blue'>Selengkapnya</span></p>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                @endforeach
-            </div>
-            <div class='text-right mt-5'>
-                <a href="{{ route('student.index') }}" >Lihat Selengkapnya <i class='mdi mdi-chevron-right'></i></a>
-            </div>
-        </div>
-    </div>
-</section>
-<section class="articles">
-    <div class="container">
-        <div class="section-header text-center">
-            <h1>Artikel</h1>
-            <div class="divider mx-auto"></div>
-        </div>
-        <div class="section-body">
-            <div class="row">
-                @foreach($articles as $article)
-                <div class="col-md-4 mb-3">
-                    <div class="card">
-                        <img src="{{ Storage::url('images/articles/'.$article->thumbnail_image_name) }}" alt="" class="card-img-top">
-                        <div class="card-body">
-                            <h3 class="card-title"><a href="{{route('article.show', ['id' => $article->id])}}">{{ $article->title }}</a></h3>
-                            <p class="card-description">{{ substr($article->content, 0, 110) }}. <a href="#">Lihat selengkapnya</a></p>
-                        </div>
-                        <div class="card-footer">
-                            <div class="card-author">
-                                <i class="fas fa-user-circle"></i> <span>{{$article->author->name}}</span>
-                            </div>
-                        </div>
+                @foreach($listPaket as $paket)
+                <div class="col-md-4 col-sm-6">
+                    <div class="divider-wrapper divider-{{ $loop->iteration }}">
+                        <a href="{{ route('paket.show', $paket->id) }}">
+                        <h2>{{ $paket->type }}</h2>
+                        </a>
+                        <p>{{ $paket->description }}</p>
                     </div>
                 </div>
                 @endforeach
             </div>
-            <div class='text-right mt-3'>
-                <a href="{{ route('article.index') }}">Lihat Semua Artikel <i class="mdi mdi-chevron-right"></i></a>
+        </div>
+    </div>
+
+    <!-- about section -->
+    <div id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <img src="{{ URL::asset('images/about-img.jpg') }}" class="img-responsive" alt="about img">
+                </div>
+                <div class="col-md-6 col-sm-12 about-des">
+                    <h2>About Business</h2>
+                    <h4>{{ $about->title }}</h4>
+                    <p>{{ $about->description }}</p>
+                </div>
             </div>
         </div>
     </div>
-</section>
-@endsection
-@push('scripts')
 
-@endpush
+    <!-- portfolio section -->
+    <div id="portfolio">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-offset-2 col-md-8 col-sm-12">
+                    <h2>Transaksi</h2>
+                </div>
+            </div>
+
+            <div class="row mt30">
+
+                <form action="{{ route('transaction.confirmation') }}" method="post">
+                    @csrf
+                    <div class="card-header mb-2">
+                        <h4>Transaksi Pesanan</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Paket</label>
+                            <select class="form-control @error('paket') is-invalid @enderror" name="paket">
+                                <option value=""></option>
+                                @foreach($listPaket as $paket)
+                                <option value="{{ $paket->id }}">{{ $paket->type }}</option>
+                                @endforeach
+                            </select>
+                            @error('paket')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Berat / Satuan</label>
+                            <select class="form-control @error('select') is-invalid @enderror" name="select">
+                                <option value=""></option>
+                                <option value="berat">Berat</option>
+                                <option value="satuan">Satuan</option>
+                            </select>
+                            @error('select')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="total_berat">Berat (kg)</label>
+                            <input name="total_berat" type="number" value="{{ old('total_berat') }}" class="form-control @error('total_berat') is-invalid @enderror" id="total_berat" placeholder="masukan berat">
+                            @error('total_berat')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Total (Satuan)</label>
+                            <input name="total_satuan" type="number" value="{{ old('total_satuan') }}" class="form-control @error('total_satuan') is-invalid @enderror" placeholder="masukan jumlah satuan" id="total_berat">
+                            @error('total_satuan')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Metode Pembayaran</label>
+                            <select class="form-control @error('metode_pembayaran') is-invalid @enderror" name="metode_pembayaran">
+                                <option value=""></option>
+                                @foreach($paymentMethod as $method)
+                                <option value="{{ $method->id }}">{{ $method->method }}</option>
+                                @endforeach
+                            </select>
+                            @error('metode_pembayaran')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" name="submit" class="btn btn-default mb-3">Pesan</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endsection

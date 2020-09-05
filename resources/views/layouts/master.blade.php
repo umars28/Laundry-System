@@ -1,40 +1,43 @@
-<!-- =========================================================================================
-  Name: KelasKita Website
-  Author: Ahmad Saugi
-  Author URL: http://ahmadsaugi.com
-  Repository: https://github.com/zuramai/kelaskita
-  Community: Devover ID
-  Community URL : http://devover.id
-========================================================================================== -->
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-        <title>@yield('title') - {{config('web_config')['WEB_TITLE']}}</title>
-        @include('layouts.head')
-  </head>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <title>@yield('title')</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--
+    OneTel Template
+    http://www.templatemo.com/tm-468-onetel
+    -->
+    <!-- stylesheet css -->
+    <link rel="stylesheet" href="{{ URL::asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('css/nivo-lightbox.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('css/nivo_themes/default/default.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('css/templatemo-style.css') }}">
+    <!-- google web font css -->
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+
+</head>
 <body>
-          <!-- Begin page -->
-          <div id="wrapper">
-      @include('layouts.topbar')
-      @include('layouts.sidebar')
-            <!-- ============================================================== -->
-            <!-- Start right Content here -->
-            <!-- ============================================================== -->
-            <div class="content-page">
-                <!-- Start content -->
-                <div class="content">
-      @yield('content')
-                </div> <!-- content -->
-    @include('layouts.footer')    
-            </div>
-            <!-- ============================================================== -->
-            <!-- End Right content here -->
-            <!-- ============================================================== -->
-    </div>
-    <!-- END wrapper -->
-    @include('layouts.footer-script')    
-    </body>
+
+@include('layouts.navbar')
+
+@yield('content')
+
+@include('layouts.footer')
+
+<!-- javascript js -->
+<script src="{{ URL::asset('js/jquery.js') }}"></script>
+<script src="{{ URL::asset('js/bootstrap.min.js') }}"></script>
+<script src="{{ URL::asset('js/nivo-lightbox.min.js') }}"></script>
+<script src="{{ URL::asset('js/custom.js') }}"></script>
+
+@stack('js')
+
+</body>
 </html>
+
+
